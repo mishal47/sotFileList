@@ -51,50 +51,45 @@ public class Main extends Thread {
 
     public static void mySearch(File[] files) {
         if (files != null && files.length > 0) {
-            int count = 0;
+            int count = 1;
             for (File file : files) {
                 if (file.isFile()) {
-                    writeHash(file);
+                    count = writeHash(file, count);
+//
                     String end = endTypes(file);
 
                     for (String type : Pictures) {
                         if (end.equals(type.toLowerCase())) {
-                            System.out.println(count++ + " " + file.getName());
                             moveFile(file, new File(directory.getParent() + File.separator + "Pictures" + File.separator + file.getName()));
                             System.out.println(" ");
                         }
                     }
                     for (String type : Videos) {
                         if (end.equals(type.toLowerCase())) {
-                            System.out.println(count++ + " " + file.getName());
                             moveFile(file, new File(directory.getParent() + File.separator + "Videos" + File.separator + file.getName()));
                             System.out.println(" ");
                         }
                     }
                     for (String type : Audios) {
                         if (end.equals(type.toLowerCase())) {
-                            System.out.println(count++ + " " + file.getName());
                             moveFile(file, new File(directory.getParent() + File.separator + "Audios" + File.separator + file.getName()));
                             System.out.println(" ");
                         }
                     }
                     for (String type : Docs) {
                         if (end.equals(type.toLowerCase())) {
-                            System.out.println(count++ + " " + file.getName());
                             moveFile(file, new File(directory.getParent() + File.separator + "Docs" + File.separator + file.getName()));
                             System.out.println(" ");
                         }
                     }
                     for (String type : Archives) {
                         if (end.equals(type.toLowerCase())) {
-                            System.out.println(count++ + " " + file.getName());
                             moveFile(file, new File(directory.getParent() + File.separator + "Archives" + File.separator + file.getName()));
                             System.out.println(" ");
                         }
                     }
                     for (String type : Trashs) {
                         if (end.equals(type.toLowerCase())) {
-                            System.out.println(count++ + " " + file.getName());
                             moveFile(file, new File(directory.getParent() + File.separator + "Trashs" + File.separator + file.getName()));
                             System.out.println(" ");
                         }
@@ -146,29 +141,39 @@ public class Main extends Thread {
         return extension[1].toLowerCase();
     }
 
-    public static void writeHash(File file) {
-//        System.out.println(Files.size(Path.of(file)));
-        long fileSize = file.length();
-        System.out.println("Size " + fileSize);
-
+    public static String foundHash(File file) {
+        String hash = "";
         try {
-            String filePath = file.getParent() + file.separator + file.getName();
+            String filePath = file.getParent() + File.separator + file.getName();
             MessageDigest md = MessageDigest.getInstance("MD5");
 
             try (FileInputStream fis = new FileInputStream(filePath);
                  DigestInputStream dis = new DigestInputStream(fis, md)) {
                 while (dis.read() != -1) {}
-                byte[] hash = md.digest();
+                byte[] digest = md.digest();  // Оновлене ім'я змінної
                 StringBuilder hexHash = new StringBuilder();
-                for (byte b : hash) {
+                for (byte b : digest) {
                     hexHash.append(String.format("%02x", b));
                 }
-                System.out.println("MD5 хеш файлу: " + hexHash.toString());
+                System.out.println("MD5 hash file: " + hexHash.toString());
+                hash = hexHash.toString();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return hash;
+    }
 
+    public static int writeHash(File file, int count) {
+        long fileSize = file.length();
+        System.out.println("Lp: " + count);
+        System.out.println("Name: " + file.getName());
+        System.out.println("Size: " + fileSize);
+
+        String hash = foundHash(file);
+        NewExcel.writeExcel(file, count, hash);
+        count++;
+        return count;
     }
 }
