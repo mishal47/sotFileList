@@ -10,30 +10,32 @@ public class NewExcel {
     private static final Sheet sheet = workbook.createSheet("My DataBase");
     private static int currentRow = 0;
 
-    public NewExcel() {
-        Row row = sheet.createRow(currentRow++);
+//    public NewExcel() { createHeaders();}
+
+    public static void createHeaders() {
+        Row row = sheet.createRow(0);
 
         Cell cell0 = row.createCell(0);
-        cell0.setCellValue("lp");
+            cell0.setCellValue("lp");
         Cell cell1 = row.createCell(1);
-        cell1.setCellValue("Name file");
+            cell1.setCellValue("Name file");
         Cell cell2 = row.createCell(2);
-        cell2.setCellValue("Size file");
+            cell2.setCellValue("Size file");
         Cell cell3 = row.createCell(3);
-        cell3.setCellValue("Hash file");
+            cell3.setCellValue("Hash file");
     }
 
     public static void writeExcel(File file, int count, String hash) {
         Row row = sheet.createRow(currentRow++); // створюємо новий рядок
 
         Cell cell0 = row.createCell(0);
-        cell0.setCellValue(count);
+            cell0.setCellValue(count);
         Cell cell1 = row.createCell(1);
-        cell1.setCellValue(file.getName());
+            cell1.setCellValue(file.getName());
         Cell cell2 = row.createCell(2);
-        cell2.setCellValue(file.length());
+            cell2.setCellValue(file.length());
         Cell cell3 = row.createCell(3);
-        cell3.setCellValue(hash);
+            cell3.setCellValue(hash);
 
         try (FileOutputStream outputStream = new FileOutputStream("temp.xlsx")) {
             workbook.write(outputStream);

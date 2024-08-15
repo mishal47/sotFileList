@@ -16,10 +16,9 @@ public class Main extends Thread {
     private static File directory; // /home/mike/Downloads/Telegram
 
     public static void main(String[] args) {
-//        System.out.println("the folder is empty");
-//    }
         MyFrame frame = new MyFrame();
-
+//        NewExcel excel = new NewExcel();
+        NewExcel.createHeaders();
         while (frame.getUserInput() == null) {
             try {
                 Thread.sleep(1000);
@@ -38,7 +37,6 @@ public class Main extends Thread {
         } else {
             System.out.println("Invalid directory or directory does not exist.");
         }
-//        System.out.println(Arrays.toString(directory.listFiles()));
 
         if (directory.listFiles().length > 0) {
             System.out.println("the folder is not empty");
@@ -46,7 +44,6 @@ public class Main extends Thread {
             System.out.println("the folder is empty");
             MyFrame.endShow();
         }
-
     }
 
     public static void mySearch(File[] files) {
@@ -172,6 +169,7 @@ public class Main extends Thread {
         System.out.println("Size: " + fileSize);
 
         String hash = foundHash(file);
+
         NewExcel.writeExcel(file, count, hash);
         count++;
         return count;
